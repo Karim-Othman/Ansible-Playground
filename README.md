@@ -42,12 +42,16 @@ this playbook should create two local users on a remote machine
 
 ### implementation steps
 1- you will need privilege escalation in order to create user at remote host; use become in playbook to do so
+
 2- create password.yml with ansible-vault to save ansible_become_pass
  
     $ansible-vault create password.yml
+
 3- you will be permitted to insert vault password (remember this pass)
+
 4- vi terminal will open up; write your ansible_become_pass in yml format
 ansible_become_pass: xx
+
 5- create "CreateUsers_Playbook.yml" file
 - This playbook should
     -  run only on trustedworker
@@ -57,6 +61,7 @@ ansible_become_pass: xx
     -  groups should be set with sudo
     -  create_home should set to true in order to create local directory
     -  apply loop for the same task for each user
+
 6- Run playbook using the below command and insert vault pass when permitted
 
 
@@ -72,27 +77,39 @@ this playbook should setup and start tomcat server on remote machine
 
 ### implementation steps
 1- This playbook should run over non-trusted ssh server. so, we must provide ssh password when login
+
 2- reuse the same password file and edit it to add ssh pass
 
     $ansible-vault edit password.yml
+
 3- insert vault pass when permitted, then add ssh_pass in yml format
 ssh_pass: xx
 
+
 4- follow along with this [link](https://www.bogotobogo.com/DevOps/Ansible/Ansible-Tomcat9-Ubuntu18-Playbook.php) to setup tomcat server 
+
 5- Create tomcat.service file in local directory to be copied to dest machine/server at ansible playbook execution time
+
 6- create "SetupTomcat.yml" playbook
+
 7- modify SetupTomcat.yml to update default port located in '/opt/tomcat/conf/server.xml <Connector port="8080"' using Ansible replace module. ******adding "name: Replace default port" task******
+
 8- create HelloWorld.html and modify SetupTomcat.yml to move this html file to "/opt/tomcat/webapps/ROOT" at remote machine. ******adding "name: Deploy html file" task******
+
 9- play SetupTomcat.yml and insert vault pass when permitted
 
         $ansible-playbook -i inventory.yml SetupTomcat.yml --ask-vault-pass --extra-vars '@password.yml'
+
 10- goto remote machine and curl to check deployed html file
 ![image](https://user-images.githubusercontent.com/17851915/104847234-80693400-58e7-11eb-83ca-e7c61c4181df.png)
 
+
 11- modify SetupTomcat.yml to add stop tomcat service as required. ******adding "name: stop Tomcat service" task******
+
 12- play SetupTomcat.yml and insert vault pass when permited
 
         $ansible-playbook -i inventory.yml SetupTomcat.yml --ask-vault-pass --extra-vars '@password.yml'
+
 13- goto remote machine and check if tomcat process is up
 
         $ ps -ef | grep -i tomcat
