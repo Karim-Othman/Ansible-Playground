@@ -1,0 +1,10 @@
+all:
+  hosts:
+    KarimOthman2c.mylabserver.com:
+  children:
+    trustedworker:
+      hosts:
+        KarimOthman1c.mylabserver.com:
+    untrustedworker:
+      hosts:
+        KarimOthman3c.mylabserver.com:

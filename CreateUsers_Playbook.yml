@@ -1,0 +1,14 @@
+- hosts: trustedworker
+  become: yes
+  vars:
+    ansible_become_pass: '{{ ansible_become_pass }}'
+  tasks:
+    - name: Add user in suders group and create home dir
+      user:
+        name: "{{ item }}"
+        password: "{{ lookup('password', 'credentials/' + item + '/password.txt encrypt=sha256_crypt') }}"
+        groups: sudo
+        create_home: True
+      loop:
+        - firstUser
+        - secondUser
